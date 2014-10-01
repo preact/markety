@@ -13,7 +13,12 @@ module Markety
     # hydrates an instance from a savon hash returned form the marketo API
     def self.from_hash(savon_hash)
       lead_record = LeadRecord.new(savon_hash[:email], savon_hash[:id].to_i)
-      savon_hash[:lead_attribute_list][:attribute].each do |attribute|
+      attribute_list = savon_hash[:lead_attribute_list][:attribute]
+      # savon converts a result set of one into a single hash
+      unless attribute_list.is_a? Array
+        attribute_list = [attribute_list]
+      end
+      attribute_list.each do |attribute|
         lead_record.set_attribute(attribute[:attr_name], attribute[:attr_value], attribute[:attr_type])
       end
       lead_record

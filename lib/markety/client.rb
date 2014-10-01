@@ -64,6 +64,7 @@ module Markety
 
       response = send_request(:sync_lead, {
         :dedup_enabled => true,
+        :return_lead => true,
         :lead_record => {
           :email => lead_record.email,
           :lead_attribute_list => {
@@ -71,6 +72,7 @@ module Markety
           }
         }
       })
+
       return LeadRecord.from_hash(response[:success_sync_lead][:result][:lead_record])
     end
 
