@@ -136,6 +136,18 @@ module Markety
       return LeadRecord.from_hash(response[:success_sync_lead][:result][:lead_record])
     end
 
+    def get_lead_activity_by_email(email)
+      lead_key = LeadKey.new('EMAIL', email)
+      return send_request(:get_lead_activity, 
+          {
+            "leadKey" => lead_key.to_hash,
+            "batchSize" => 100,
+            "activityFilter" => {
+              "excludeTypes" => { "activityType" => ["ChangeDataValue", "ChangeScore"] }
+            }
+          })
+    end
+
     # MObject functionality
     def list_m_objects()
       response = send_request(:list_m_objects, {
